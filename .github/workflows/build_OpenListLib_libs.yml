@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ master, main ]
 
+permissions:
+  contents: write
+
 jobs:
   app:
     runs-on: ubuntu-latest
@@ -101,9 +104,8 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ^1.24
-      - name: Build
-        run: |
-          bash build.sh dev web
+      - name: Setup web
+        run: bash build.sh dev web
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-java@v4
@@ -137,9 +139,9 @@ jobs:
           name: android-aar-libs
           path: mobile.aar
       - name: Replace mod
-        run: go mod edit -replace github.com/rclone/rclone@v1.67.0=github.com/AlistMobile/rclone@v1.67.2
-      - name: Replace mod
-        run: go mod edit -module=github.com/OpenListTeam/OpenList
+        run: |
+          go mod edit -replace github.com/rclone/rclone@v1.67.0=github.com/AlistMobile/rclone@v1.67.2
+          go mod edit -module=github.com/OpenListTeam/OpenList
       - name: build ios xcframework
         run: gomobile bind -ldflags '-w -s -extldflags "-lresolve"' --target=ios,macos,iossimulator -o OpenListMobile.xcframework ./libs/mobile
       - run: zip -r OpenListMobile.xcframework.zip OpenListMobile.xcframework
