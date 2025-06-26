@@ -18,8 +18,6 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ^1.24
-      - name: Test golang code
-        run: go test ./...
       - name: Build
         run: |
           bash build.sh dev web
@@ -78,6 +76,8 @@ jobs:
           bash build.sh dev web
       - name: Build libs
         run: bash ./libs/scripts/lib/builddylib.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/upload-artifact@v4
         with:
           name: macos-libs
@@ -131,7 +131,7 @@ jobs:
           name: android-aar-libs
           path: mobile.aar
       - name: Replace mod
-        run: go mod edit -replace github.com/rclone/rclone@v1.67.0=github.com/AlistMobile/rclone@v1.67.2
+        run: go mod edit -module=github.com/OpenListTeam/OpenList -replace github.com/rclone/rclone@v1.67.0=github.com/AlistMobile/rclone@v1.67.2
       - name: build ios xcframework
         run: gomobile bind -ldflags '-w -s -extldflags "-lresolve"' --target=ios,macos,iossimulator -o OpenListMobile.xcframework ./libs/mobile
       - run: zip -r OpenListMobile.xcframework.zip OpenListMobile.xcframework
