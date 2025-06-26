@@ -122,7 +122,7 @@ jobs:
       - run: echo $ANDROID_NDK_HOME
       - name: install and setup gomobile
         run: |
-         go get -u golang.org/x/mobile/...
+          go get -u golang.org/x/mobile/...
           go install golang.org/x/mobile/cmd/gobind@latest
           go install golang.org/x/mobile/cmd/gomobile@latest
           gomobile init
@@ -141,8 +141,8 @@ jobs:
           path: mobile.aar
       - name: Replace mod
         run:
-         go mod edit -replace github.com/rclone/rclone@v1.67.0=github.com/AlistMobile/rclone@v1.67.2
-         go mod edit -module=github.com/OpenListTeam/OpenList
+          go mod edit -replace github.com/rclone/rclone@v1.67.0=github.com/AlistMobile/rclone@v1.67.2
+          go mod edit -module=github.com/OpenListTeam/OpenList
       - name: build ios xcframework
         run: gomobile bind -ldflags '-w -s -extldflags "-lresolve"' --target=ios,macos,iossimulator -o OpenListMobile.xcframework ./libs/mobile
       - run: zip -r OpenListMobile.xcframework.zip OpenListMobile.xcframework
