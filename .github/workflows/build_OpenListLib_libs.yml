@@ -37,6 +37,8 @@ jobs:
       - name: Build
         run: |
           bash build.sh dev web
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: nttld/setup-ndk@v1
         id: setup-ndk
         with:
@@ -79,7 +81,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build libs
-        run: bash ./libs/scripts/lib/builddylib.sh
+        run:
+          go mod tidy
+          go get
+          bash ./libs/scripts/lib/builddylib.sh
       - uses: actions/upload-artifact@v4
         with:
           name: macos-libs
@@ -102,6 +107,8 @@ jobs:
       - name: Build
         run: |
           bash build.sh dev web
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
