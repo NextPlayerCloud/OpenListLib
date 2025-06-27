@@ -1,0 +1,119 @@
+name: Build Libs
+
+on:
+  release:
+    types: [ published ]
+permissions: write-all
+
+jobs:
+  linux-android-windows-libs:
+#    needs: app
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ^1.24
+      - name: Setup web
+        run: bash build.sh dev web
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r25c
+          add-to-path: true
+      - name: Install requirement
+        run: sudo apt-get update && sudo apt-get install gcc-aarch64-linux-gnu binutils-mingw-w64 gcc-mingw-w64-x86-64 -y
+      - name: Build linux libs
+        run: bash ./libs/scripts/lib/buildso.sh
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+      - name: Build windows libs
+        run: bash ./libs/scripts/lib/builddll.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-libs
+          path: build/linux
+      #      - uses: actions/upload-artifact@v4
+      #        with:
+      #          name: android-libs
+      #          path: build/android
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-libs
+          path: build/windows
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/linux/libmobile_amd64.so
+            build/linux/libmobile_arm64.so
+            build/windows/mobile_amd64.dll
+  gomobile-libs-android:
+    needs: linux-android-windows-libs
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ^1.24
+      - name: Setup web
+        run: bash build.sh dev web
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r21e
+          add-to-path: false
+      - run: ls ~/Library/Android/sdk/ndk
+      - run: echo $ANDROID_NDK_HOME
+      - name: install and setup gomobile
+        run: |
+          go get -u golang.org/x/mobile/...
+          go install golang.org/x/mobile/cmd/gobind@latest
+          go install golang.org/x/mobile/cmd/gomobile@latest
+          gomobile init
+          gomobile version
+          gomobile clean
+        env:
+          GO111MODULE: on
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+      - name: build android aar
+        run: gomobile bind -target=android  -o mobile.aar ./libs/mobile
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-aar-libs
+          path: mobile.aar
+      - name: Replace mod
+        run: |
+          go mod edit -replace github.com/rclone/rclone@v1.67.0=github.com/AlistMobile/rclone@v1.67.2
+          go mod download
+      - name: build ios xcframework
+        run: gomobile bind -ldflags '-w -s -extldflags "-lresolve"' --target=ios,macos,iossimulator -o OpenListMobile.xcframework ./libs/mobile
+      - run: zip -r OpenListMobile.xcframework.zip OpenListMobile.xcframework
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-macos-xcframework-libs
+          path: OpenListMobile.xcframework.zip
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            mobile.aar
+            OpenListMobile.xcframework.zip
