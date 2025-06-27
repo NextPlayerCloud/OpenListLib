@@ -1,4 +1,4 @@
-name: Build Libs
+name: Release Libs
 
 on:
   push:
@@ -51,6 +51,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
+          make_latest: true
           files: |
             build/linux/libmobile_amd64.so
             build/linux/libmobile_arm64.so
@@ -115,6 +116,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
+          make_latest: true
           files: |
             mobile.aar
             OpenListMobile.xcframework.zip
