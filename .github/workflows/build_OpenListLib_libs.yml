@@ -10,23 +10,23 @@ permissions:
   contents: write
 
 jobs:
-  app:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ^1.24
-      - name: Setup web
-        run: bash build.sh dev web
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#  app:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#      - name: Set up Go
+#        uses: actions/setup-go@v5
+#        with:
+#          go-version: ^1.24
+#      - name: Setup web
+#        run: bash build.sh dev web
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   linux-android-windows-libs:
-    needs: app
+#    needs: app
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -143,45 +143,7 @@ jobs:
       - name: Replace mod
         run: |
           go mod edit -replace github.com/rclone/rclone@v1.67.0=github.com/AlistMobile/rclone@v1.67.2
-          go mod edit -module=github.com/OpenListTeam/OpenList
-      - name: build ios xcframework
-        run: gomobile bind -ldflags '-w -s -extldflags "-lresolve"' --target=ios,macos,iossimulator -o OpenListMobile.xcframework ./libs/mobile
-      - run: zip -r OpenListMobile.xcframework.zip OpenListMobile.xcframework
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ios-macos-xcframework-libs
-          path: OpenListMobile.xcframework.zip
-  gomobile-libs-ios-macOS:
-    needs: gomobile-libs-android
-    runs-on: macos-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ^1.24
-      - name: Replace mod
-        run: |
-          go mod edit -replace github.com/rclone/rclone@v1.67.0=github.com/AlistMobile/rclone@v1.67.2
-          go mod tidy
           go mod download
-      - name: Setup web
-        run: bash build.sh dev web
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: install and setup gomobile
-        run: |
-          go get -u golang.org/x/mobile/...
-          go install golang.org/x/mobile/cmd/gobind@latest
-          go install golang.org/x/mobile/cmd/gomobile@latest
-          gomobile init
-          gomobile version
-          gomobile clean
-        env:
-          GO111MODULE: on
       - name: build ios xcframework
         run: gomobile bind -ldflags '-w -s -extldflags "-lresolve"' --target=ios,macos,iossimulator -o OpenListMobile.xcframework ./libs/mobile
       - run: zip -r OpenListMobile.xcframework.zip OpenListMobile.xcframework
