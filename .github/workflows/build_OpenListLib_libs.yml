@@ -1,4 +1,4 @@
-name: Test
+name: Build Libs
 
 on:
   push:
@@ -26,6 +26,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   linux-android-windows-libs:
+    needs: app
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -94,6 +95,7 @@ jobs:
 #          name: ios-libs
 #          path: build/ios
   gomobile-libs-android:
+    needs: linux-android-windows-libs
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -150,6 +152,7 @@ jobs:
           name: ios-macos-xcframework-libs
           path: OpenListMobile.xcframework.zip
   gomobile-libs-ios-macOS:
+    needs: gomobile-libs-android
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -160,6 +163,11 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ^1.24
+      - name: Replace mod
+        run: |
+          go mod edit -replace github.com/rclone/rclone@v1.67.0=github.com/AlistMobile/rclone@v1.67.2
+          go mod tidy
+          go mod download
       - name: Setup web
         run: bash build.sh dev web
         env:
@@ -174,9 +182,6 @@ jobs:
           gomobile clean
         env:
           GO111MODULE: on
-      - name: Replace mod
-        run: |
-          go mod edit -replace github.com/rclone/rclone@v1.67.0=github.com/AlistMobile/rclone@v1.67.2
       - name: build ios xcframework
         run: gomobile bind -ldflags '-w -s -extldflags "-lresolve"' --target=ios,macos,iossimulator -o OpenListMobile.xcframework ./libs/mobile
       - run: zip -r OpenListMobile.xcframework.zip OpenListMobile.xcframework
