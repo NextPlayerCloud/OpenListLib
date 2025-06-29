@@ -37,7 +37,7 @@ echo "openlist_version=$LATEST_VER" >> "$GITHUB_ENV"
 VER=$(cat "$VERSION_FILE")
 
 if [ -z "$VER" ]; then
-  VER="v3.25.1"
+  VER="v4.0.3"
   echo "No version file, use default version ${VER}"
 fi
 
