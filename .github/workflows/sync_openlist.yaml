@@ -39,7 +39,9 @@ jobs:
           else
             git remote add openlist https://github.com/OpenListTeam/OpenList.git
             # TODO 直接拉取主分支后面可以使用tag的  
-            git fetch openlist main
+            git fetch openlist main --tags
+            # git cherry-pick <tag-hash>
+            # --allow-unrelated-histories
             git merge openlist/main
 
             echo -e "[自动同步OpenList] ${{ env.openlist_version }}" > $GITHUB_WORKSPACE/CHANGELOG.md
