@@ -11,6 +11,8 @@ on:
     paths:
       - "sync_openlist.yaml"
 
+permissions: write-all
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -42,7 +44,7 @@ jobs:
             git fetch openlist main --tags
             # git cherry-pick <tag-hash>
             # --allow-unrelated-histories
-            git merge openlist/main
+            git merge openlist/main --allow-unrelated-histories
 
             echo -e "[自动同步OpenList] ${{ env.openlist_version }}" > $GITHUB_WORKSPACE/CHANGELOG.md
             echo -e "${{ env.openlist_version }}" > ${{ env.VERSION_FILE }}
