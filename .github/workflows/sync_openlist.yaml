@@ -39,6 +39,7 @@ jobs:
           then
             echo "无更新"
           else
+            npm install -g git-automerge
             git config user.name "github-actions"
             git config user.email "91173430+matteriot@users.noreply.github.com."
             git remote add openlist https://github.com/OpenListTeam/OpenList.git
@@ -46,7 +47,8 @@ jobs:
             git fetch openlist main --tags
             # git cherry-pick <tag-hash>
             # --allow-unrelated-histories
-            git merge openlist/main --allow-unrelated-histories
+            # git merge openlist/main --allow-unrelated-histories
+            git automerge --merge openlist/main
 
             echo -e "[自动同步OpenList] ${{ env.openlist_version }}" > $GITHUB_WORKSPACE/CHANGELOG.md
             echo -e "${{ env.openlist_version }}" > ${{ env.VERSION_FILE }}
