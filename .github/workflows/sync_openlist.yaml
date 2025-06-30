@@ -53,9 +53,9 @@ jobs:
 
             git add .
             git commit -m "[bot] Update openlist to ${{ env.openlist_version }}"
-            git tag "${{ env.openlist_version }}"
-            git push origin main
+            # git tag "${{ env.openlist_version }}"
             git push --tags
+            git push origin main
           fi
 
       - name: Run workflow release
