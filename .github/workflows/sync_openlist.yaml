@@ -1,68 +1,66 @@
-# 参考来自于 https://github.com/jing332/AListFlutter/blob/master/.github/workflows/sync_alist.yaml 感谢jing332 !
-name: CheckOpenList
-
-on:
-  schedule:
-    - cron: "0 5,17 * * *" # 每日5点和17点执行
-  workflow_dispatch:
-  push:
-    branches:
-      - "main"
-    paths:
-      - "sync_openlist.yaml"
-
-permissions: write-all
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    env:
-      VERSION_FILE: ${{ github.workspace }}/openlist_version
-    steps:
-      - uses: actions/checkout@v3
-      - run: |
-          cd $GITHUB_WORKSPACE/.github/scripts
-          chmod +x ./*.sh
-
-          touch ${{ env.VERSION_FILE }}
-          ./check_openlist.sh
-
-      - name: Shell
-        run: |
-          echo "openlist_version=${{ env.openlist_version }}"
-          echo "openlist_update=${{ env.openlist_update }}" 
-
-          # 用于测试
-          # echo "openlist_update=1" >> $GITHUB_ENV 
-
-          if [ ${{ env.openlist_update }} -eq 0 ]
-          then
-            echo "无更新"
-          else
-            npm install -g git-automerge
-            git config user.name "github-actions"
-            git config user.email "91173430+matteriot@users.noreply.github.com."
-            git remote add openlist https://github.com/OpenListTeam/OpenList.git
-            # TODO 直接拉取主分支后面可以使用tag的  
-            git fetch openlist main --tags
-            # git cherry-pick <tag-hash>
-            # --allow-unrelated-histories
-            # git merge openlist/main --allow-unrelated-histories
-            git automerge --merge openlist/main
-
-            echo -e "[自动同步OpenList] ${{ env.openlist_version }}" > $GITHUB_WORKSPACE/CHANGELOG.md
-            echo -e "${{ env.openlist_version }}" > ${{ env.VERSION_FILE }}
-
-            git add .
-            git commit -m "[bot] Update openlist to ${{ env.openlist_version }}"
-            # git tag "${{ env.openlist_version }}"
-            git push --tags
-            git push origin main
-          fi
-
-      - name: Run workflow release
-        if: env.openlist_update == 1 && ( success() || failure() )
-        run: |
-          gh workflow run build_OpenListLib_libs_release.yml -R OpenListApp/OpenListLib
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+## 参考来自于 https://github.com/jing332/AListFlutter/blob/master/.github/workflows/sync_alist.yaml 感谢jing332 !
+#name: CheckOpenList
+#
+#on:
+#  schedule:
+#    - cron: "0 5,17 * * *" # 每日5点和17点执行
+#  workflow_dispatch:
+#  push:
+#    branches:
+#      - "main"
+#    paths:
+#      - "sync_openlist.yaml"
+#
+#permissions: write-all
+#
+#jobs:
+#  build:
+#    runs-on: ubuntu-latest
+#    env:
+#      VERSION_FILE: ${{ github.workspace }}/openlist_version
+#    steps:
+#      - uses: actions/checkout@v3
+#      - run: |
+#          cd $GITHUB_WORKSPACE/.github/scripts
+#          chmod +x ./*.sh
+#
+#          touch ${{ env.VERSION_FILE }}
+#          ./check_openlist.sh
+#
+#      - name: Shell
+#        run: |
+#          echo "openlist_version=${{ env.openlist_version }}"
+#          echo "openlist_update=${{ env.openlist_update }}"
+#
+#          # 用于测试
+#          # echo "openlist_update=1" >> $GITHUB_ENV
+#
+#          if [ ${{ env.openlist_update }} -eq 0 ]
+#          then
+#            echo "无更新"
+#          else
+#            git config user.name "github-actions"
+#            git config user.email "91173430+matteriot@users.noreply.github.com."
+#            git remote add openlist https://github.com/OpenListTeam/OpenList.git
+#            # TODO 直接拉取主分支后面可以使用tag的
+#            git fetch openlist main --tags
+#            # git cherry-pick <tag-hash>
+#            # --allow-unrelated-histories
+#            git merge openlist/main --allow-unrelated-histories
+#
+#            echo -e "[自动同步OpenList] ${{ env.openlist_version }}" > $GITHUB_WORKSPACE/CHANGELOG.md
+#            echo -e "${{ env.openlist_version }}" > ${{ env.VERSION_FILE }}
+#
+#            git add .
+#            git commit -m "[bot] Update openlist to ${{ env.openlist_version }}"
+#            # git tag "${{ env.openlist_version }}"
+#            git push --tags
+#            git push origin main
+#          fi
+#
+#      - name: Run workflow release
+#        if: env.openlist_update == 1 && ( success() || failure() )
+#        run: |
+#          gh workflow run build_OpenListLib_libs_release.yml -R OpenListApp/OpenListLib
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
