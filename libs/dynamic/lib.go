@@ -1,5 +1,7 @@
 package main
 
+import "C"
+
 import "github.com/OpenListTeam/OpenList/v4/libs/mobile"
 
 func main() {
