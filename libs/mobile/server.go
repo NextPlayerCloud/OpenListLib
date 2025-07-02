@@ -10,12 +10,12 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/OpenListTeam/OpenList/cmd"
-	"github.com/OpenListTeam/OpenList/cmd/flags"
-	"github.com/OpenListTeam/OpenList/internal/bootstrap"
-	"github.com/OpenListTeam/OpenList/internal/conf"
-	"github.com/OpenListTeam/OpenList/pkg/utils"
-	"github.com/OpenListTeam/OpenList/server"
+	"github.com/OpenListTeam/OpenList/v4/cmd"
+	"github.com/OpenListTeam/OpenList/v4/cmd/flags"
+	"github.com/OpenListTeam/OpenList/v4/internal/bootstrap"
+	"github.com/OpenListTeam/OpenList/v4/internal/conf"
+	"github.com/OpenListTeam/OpenList/v4/pkg/utils"
+	"github.com/OpenListTeam/OpenList/v4/server"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )

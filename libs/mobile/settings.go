@@ -1,10 +1,10 @@
 package mobile
 
 import (
-	"github.com/OpenListTeam/OpenList/cmd"
-	"github.com/OpenListTeam/OpenList/cmd/flags"
-	"github.com/OpenListTeam/OpenList/internal/op"
-	"github.com/OpenListTeam/OpenList/pkg/utils"
+	"github.com/OpenListTeam/OpenList/v4/cmd"
+	"github.com/OpenListTeam/OpenList/v4/cmd/flags"
+	"github.com/OpenListTeam/OpenList/v4/internal/op"
+	"github.com/OpenListTeam/OpenList/v4/pkg/utils"
 )
 
 func SetConfigData(path string) {
