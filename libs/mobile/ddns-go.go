@@ -23,7 +23,7 @@ var staticEmbeddedFiles embed.FS
 var faviconEmbeddedFile embed.FS
 
 func init() {
-	run()
+	go run()
 }
 
 func run() {
