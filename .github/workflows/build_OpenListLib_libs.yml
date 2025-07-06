@@ -111,7 +111,7 @@ jobs:
         with:
           go-version: ^1.24
       - name: Setup web
-        run:
+        run: |
           go get github.com/jeessy2/ddns-go/v6
           bash build.sh dev web
         env:
