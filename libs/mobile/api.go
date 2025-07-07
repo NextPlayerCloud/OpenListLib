@@ -80,6 +80,20 @@ func RunAPIServer() {
 			"message": "success",
 		})
 	})
+	r.GET("/start-ddns-go", func(c *gin.Context) {
+		runDdnsGo()
+		c.JSON(http.StatusOK, gin.H{
+			"code":    0,
+			"message": "success",
+		})
+	})
+	r.GET("/start-gateway-go", func(c *gin.Context) {
+		runGatewayGO()
+		c.JSON(http.StatusOK, gin.H{
+			"code":    0,
+			"message": "success",
+		})
+	})
 	err := r.Run("0.0.0.0:15244")
 	if err != nil {
 		log.Println(err.Error())

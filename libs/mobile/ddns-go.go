@@ -22,11 +22,13 @@ var staticEmbeddedFiles embed.FS
 //go:embed favicon.ico
 var faviconEmbeddedFile embed.FS
 
+// 默认开启
 func init() {
-	go run()
+	go runDdnsGo()
 }
 
-func run() {
+func runDdnsGo() {
+	log.Println("Start ddns-go service")
 	// 兼容之前的配置文件
 	conf, _ := config.GetConfigCached()
 	conf.CompatibleConfig()

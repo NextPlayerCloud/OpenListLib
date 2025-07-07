@@ -22,6 +22,7 @@ jobs:
       - name: Setup web
         run: |
           go get github.com/jeessy2/ddns-go/v6
+          go get github.com/OpenIoTHub/gateway-go/v2
           bash build.sh dev web
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -59,7 +60,7 @@ jobs:
             build/linux/libmobile_arm64.so
             build/windows/mobile_amd64.dll
   gomobile-libs-android:
-    needs: linux-android-windows-libs
+#    needs: linux-android-windows-libs
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -73,6 +74,7 @@ jobs:
       - name: Setup web
         run: |
           go get github.com/jeessy2/ddns-go/v6
+          go get github.com/OpenIoTHub/gateway-go/v2
           bash build.sh dev web
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

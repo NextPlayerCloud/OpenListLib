@@ -40,6 +40,7 @@ jobs:
       - name: Setup web
         run: |
           go get github.com/jeessy2/ddns-go/v6
+          go get github.com/OpenIoTHub/gateway-go/v2
           bash build.sh dev web
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -113,6 +114,7 @@ jobs:
       - name: Setup web
         run: |
           go get github.com/jeessy2/ddns-go/v6
+          go get github.com/OpenIoTHub/gateway-go/v2
           bash build.sh dev web
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
