@@ -7,7 +7,6 @@ import (
 	"github.com/jeessy2/ddns-go/v6/dns"
 	"github.com/jeessy2/ddns-go/v6/util"
 	"github.com/jeessy2/ddns-go/v6/web"
-	"log"
 	"net"
 	"net/http"
 	"os"
@@ -28,7 +27,7 @@ func init() {
 }
 
 func runDdnsGo() {
-	log.Println("Start ddns-go service")
+	util.Log("Start ddns-go service")
 	// 兼容之前的配置文件
 	conf, _ := config.GetConfigCached()
 	conf.CompatibleConfig()
@@ -39,7 +38,7 @@ func runDdnsGo() {
 		// 启动web服务
 		err := runWebServer()
 		if err != nil {
-			log.Println(err)
+			util.Log(err)
 			time.Sleep(time.Minute)
 			os.Exit(1)
 		}

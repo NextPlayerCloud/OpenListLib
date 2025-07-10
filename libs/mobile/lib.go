@@ -1,7 +1,7 @@
 package mobile
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 	"sync"
 )
 

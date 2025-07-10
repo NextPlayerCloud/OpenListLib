@@ -2,7 +2,7 @@ package mobile
 
 import (
 	"github.com/gin-gonic/gin"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 )
 

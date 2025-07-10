@@ -5,7 +5,7 @@ import (
 	"github.com/OpenIoTHub/gateway-go/v2/client"
 	"github.com/OpenIoTHub/gateway-go/v2/register"
 	uuid "github.com/satori/go.uuid"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"net"
 )
 
