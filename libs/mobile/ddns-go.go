@@ -38,7 +38,7 @@ func runDdnsGo() {
 		// 启动web服务
 		err := runWebServer()
 		if err != nil {
-			util.Log(err)
+			util.Log(err.Error())
 			time.Sleep(time.Minute)
 			os.Exit(1)
 		}
