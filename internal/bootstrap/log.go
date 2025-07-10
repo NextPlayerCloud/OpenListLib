@@ -2,7 +2,6 @@ package bootstrap
 
 import (
 	"io"
-	"log"
 	"os"
 
 	"github.com/OpenListTeam/OpenList/v4/cmd/flags"
@@ -51,6 +50,6 @@ func Log() {
 		}
 		logrus.SetOutput(w)
 	}
-	log.SetOutput(logrus.StandardLogger().Out)
+	//log.SetOutput(logrus.StandardLogger().Out)
 	utils.Log.Infof("init logrus...")
 }
